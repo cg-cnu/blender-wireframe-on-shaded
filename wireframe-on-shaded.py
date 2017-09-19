@@ -3,7 +3,7 @@
 
 bl_info = {
     "name": "Wireframe on shaded",
-    "description": "Toggle wireframe on shaded with shift + W",
+    "description": "Toggle wireframe on shaded for all objects in the viewport with Shift + W",
     "author": "Sreenivas Alapati",
     "version": (1, 0),
     "blender": (2, 9, 0),
@@ -12,24 +12,21 @@ bl_info = {
 import bpy
 
 def main(context):            
-    objects_list = [ obj for obj in bpy.data.objects if obj.type in ['MESH']]
-    objects_with_wire = [obj for obj in objects_list if obj.show_wire == True]
+    meshes = [obj for obj in bpy.data.objects if obj.type == 'MESH']
+    wireframeMeshes = [mesh for mesh in meshes if mesh.show_wire == True]
     
-    if len(objects_with_wire) == 0:
-        for ob in objects_list:
-            ob.show_wire = ob.show_all_edges = True             
+    if wireframeMeshes:
+        for mesh in wireframeMeshes:
+            mesh.show_wire = mesh.show_all_edges = False
     else:
-        for ob in objects_with_wire:
-            ob.show_wire = ob.show_all_edges = False            
-
+        for mesh in meshes:
+            mesh.show_wire = mesh.show_all_edges = True
+    
 class wireframeOnShaded(bpy.types.Operator):
-    """ Displays wire frame on shaded with draw all edges on all objects"""
+    """ Displays wire frame on shaded by enabling showing wire and show all edges on all objects in the viewport
+    """
     bl_idname = "object.wireframe_on_shaded"
     bl_label = "Wireframe on shaded"
-
-    @classmethod
-    def poll(cls, context):
-        return context.active_object is not None
 
     def execute(self, context):
         main(context)
