@@ -8,11 +8,8 @@ bl_info = {
 
 import bpy
 
-D = bpy.data
-C = bpy.context
-
 def main(context):            
-    meshes = [obj for obj in D.objects if obj.type == 'MESH']
+    meshes = [obj for obj in bpy.data.objects if obj.type == 'MESH']
     wireframeMeshes = [mesh for mesh in meshes if mesh.show_wire == True]
     
     if wireframeMeshes:
@@ -32,12 +29,12 @@ class wireframeOnShaded(bpy.types.Operator):
 
 def register():
     bpy.utils.register_class(wireframeOnShaded)
-    kmo = C.window_manager.keyconfigs.default.keymaps['Object Mode']
+    kmo = bpy.context.window_manager.keyconfigs.default.keymaps['Object Mode']
     kmo.keymap_items.new("object.wireframe_on_shaded", 'W', 'PRESS', shift=True)
    
 def unregister():
     bpy.utils.unregister_class(wireframeOnShaded)
-    kmo = C.window_manager.keyconfigs.default.keymaps['Object Mode']
+    kmo = bpy.context.window_manager.keyconfigs.default.keymaps['Object Mode']
     for kmi in (kmi for kmi in kmo.keymap_items if kmi.idname in {"object.wireframe_on_shaded", }):
         km.keymap_items.remove(kmi) 
 
